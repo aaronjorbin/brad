@@ -1,0 +1,9 @@
+=== BRAD ===
+Contributors: jorbin
+Tags: seo
+Requires at least: 4.8
+Tested up to: 4.9alpha
+Stable tag: trunk
+License: GPLv2+
+
+BRAD will help you by providing Better Responsibility Around Discoverability. Don\'t accidentally have your site excluded from search engines. 
