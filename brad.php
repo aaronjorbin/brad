@@ -43,7 +43,7 @@ class BRAD_Admin_Notice {
 	 */
 	public function clear_dismissed_on_changes( $option, $old_value, $value ) {
 
-		// If we are on public flag, handle that.
+		// If we are on public flag or one of the URL updates, handle that.
 		if ( $old_value !== $value && in_array( sanitize_key( $option ), array( 'blog_public', 'home', 'siteurl' ) ) ) {
 			update_option( 'brad_dismiss_notice', 'no', 'no' );
 		}
@@ -78,7 +78,7 @@ class BRAD_Admin_Notice {
 	}
 
 	/**
-	 * Make a small setting for dismissing the notice.
+	 * Handle our small Ajax call for when the notice is dismissed.
 	 *
 	 * @return boolean
 	 */
@@ -89,13 +89,8 @@ class BRAD_Admin_Notice {
 			die();
 		}
 
-		// Check for the specific notice.
-		if ( empty( $_POST['action'] ) || 'dismiss_brad_notice' !== sanitize_key( $_POST['action'] ) ) {
-			return false;
-		}
-
-		// Check for the specific dismiss.
-		if ( empty( $_POST['dismiss'] ) ) {
+		// Check for the specific action and the dismiss flag.
+		if ( empty( $_POST['dismiss'] ) || empty( $_POST['action'] ) || 'dismiss_brad_notice' !== sanitize_key( $_POST['action'] ) ) {
 			return false;
 		}
 
