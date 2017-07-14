@@ -20,7 +20,8 @@ class BRAD_Admin_Notice {
 	 * @return void
 	 */
 	public function init() {
-		add_action( 'admin_notices',						array( $this, 'admin_notices'               )           );
+		add_action( 'updated_option',                       array( $this, 'clear_dismissed_on_changes'  ),  10, 3   );
+		add_action( 'admin_notices',                        array( $this, 'admin_notices'               )           );
 		add_action( 'wp_ajax_dismiss_brad_notice',          array( $this, 'dismiss_notice'              )           );
 		add_action( 'admin_footer',                         array( $this, 'add_js_for_ajax'             )           );
 
@@ -29,6 +30,23 @@ class BRAD_Admin_Notice {
 		add_filter( 'cron_schedules',                       array( $this, 'add_weekly_cron_time'        )           );
 		register_activation_hook( __FILE__,                 array( $this, 'set_setting_cron'            )           );
 		register_deactivation_hook( __FILE__,               array( $this, 'clear_setting_cron'          )           );
+	}
+
+	/**
+	 * Fires after the value of a specific option has been successfully updated.
+	 *
+	 * @param  string $option     Name of the updated option.
+	 * @param  mixed  $old_value  The old option value.
+	 * @param  mixed  $value      The new option value.
+	 *
+	 * @return void
+	 */
+	public function clear_dismissed_on_changes( $option, $old_value, $value ) {
+
+		// If we are on public flag, handle that.
+		if ( $old_value !== $value && in_array( sanitize_key( $option ), array( 'blog_public', 'home', 'siteurl' ) ) ) {
+			update_option( 'brad_dismiss_notice', 'no', 'no' );
+		}
 	}
 
 	/**
@@ -43,17 +61,19 @@ class BRAD_Admin_Notice {
 			return;
 		}
 
-		// Now echo out the message.
+		// Wrap the message in our div, including the dismissable class and our own for the Ajax call.
 		echo '<div class="notice notice-warning is-dismissible brad-not-public-notice">';
 
-		/*
-			TRANSLATORS:
-			1: Opening strong (bold) tag
-			2: Closing strong (bold) tag
-			3: Opening anchor (including href)
-			4: Closing anchor
-		*/
-		echo '<p>' . sprintf( __( '%1$s NOTICE: %2$s This site is NOT public. %3$s Click here %4$s to update this setting.', 'brad' ), '<strong>', '</strong>', '<a href="' . esc_url( admin_url( 'options-reading.php' ) ) . '">', '</a>' ) . '</p>';
+			/*
+				TRANSLATORS:
+				1: Opening strong (bold) tag
+				2: Closing strong (bold) tag
+				3: Opening anchor (including href)
+				4: Closing anchor
+			*/
+			echo '<p>' . sprintf( __( '%1$s NOTICE: %2$s This site is NOT public. %3$s Click here %4$s to update this setting.', 'brad' ), '<strong>', '</strong>', '<a href="' . esc_url( admin_url( 'options-reading.php' ) ) . '">', '</a>' ) . '</p>';
+
+		// Close up the div.
 		echo '</div>';
 	}
 
@@ -164,25 +184,28 @@ class BRAD_Admin_Notice {
 		// If we don't already have the weekly schedule, add it.
 		if ( ! isset( $schedules['weekly'] ) ) {
 
+			// Set the weekly array data.
 			$schedules['weekly'] = array(
-				'display' => __( 'Once Weekly', 'brad' ),
-				'interval' => 604800,
+				'display'   => __( 'Once Weekly', 'brad' ),
+				'interval'  => 604800,
 			);
 		}
 
-		// Return the array of schedules.
+		// Return the modified array of schedules.
 		return $schedules;
 	}
 
 	/**
 	 * Set a WP cron check for clearing the dismissed setting.
+	 *
+	 * @return void
 	 */
 	public function set_setting_cron() {
 
 		// Add our scheduled event on activation.
-	    if ( ! wp_next_scheduled( 'check_dismissed' ) ) {
+		if ( ! wp_next_scheduled( 'check_dismissed' ) ) {
 			wp_schedule_event( time(), 'weekly', 'check_dismissed' );
-	    }
+		}
 	}
 
 	/**
