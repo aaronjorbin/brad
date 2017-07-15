@@ -89,10 +89,15 @@ class BRAD_Admin_Notice {
 			die();
 		}
 
+		// Bail if we aren't able to do this.
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return false;
 		}
-		check_ajax_referer( 'brad_nonce', 'brad_nonce' );
+
+		// Bail if the nonce check fails.
+		if ( false === $nonce = check_ajax_referer( 'brad_nonce', 'brad_nonce', false ) ) {
+			return false;
+		}
 
 		// Check for the specific action and the dismiss flag.
 		if ( empty( $_POST['dismiss'] ) || empty( $_POST['action'] ) || 'dismiss_brad_notice' !== sanitize_key( $_POST['action'] ) ) {
@@ -102,7 +107,7 @@ class BRAD_Admin_Notice {
 		// Update our option.
 		update_option( 'brad_dismiss_notice', 'yes', 'no' );
 
-		// And true.
+		// And return true.
 		return true;
 	}
 
