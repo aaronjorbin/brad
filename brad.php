@@ -89,6 +89,11 @@ class BRAD_Admin_Notice {
 			die();
 		}
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+		check_ajax_referer( 'brad_nonce', 'brad_nonce' );
+
 		// Check for the specific action and the dismiss flag.
 		if ( empty( $_POST['dismiss'] ) || empty( $_POST['action'] ) || 'dismiss_brad_notice' !== sanitize_key( $_POST['action'] ) ) {
 			return false;
@@ -118,6 +123,7 @@ class BRAD_Admin_Notice {
 
 			var data = {
 				action:  'dismiss_brad_notice',
+				brad_nonce: '<?php echo wp_create_nonce( 'brad_nonce' ); ?>',
 				dismiss: true,
 			};
 
