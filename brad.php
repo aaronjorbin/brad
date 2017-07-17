@@ -2,7 +2,7 @@
 /*
  Plugin Name: BRAD
  Plugin URI: https://github.com/aaronjorbin/brad
- Description: Better Responsility Around Discoverability
+ Description: Better Responsibility Around Discoverability
  Version: 0.1.0
  Author: Aaron Jorbin
  Author URI: https://daily.jorb.in
