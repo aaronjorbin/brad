@@ -24,6 +24,7 @@ class BRAD_Admin_Notice {
 		add_action( 'admin_notices',                        array( $this, 'admin_notices'               )           );
 		add_action( 'wp_ajax_dismiss_brad_notice',          array( $this, 'dismiss_notice'              )           );
 		add_action( 'admin_footer',                         array( $this, 'add_js_for_ajax'             )           );
+		add_action( 'admin_init',                           array( $this, 'add_privacy_policy'          )           );
 
 		// Our setup for the scheduled check and clear of the setting.
 		add_action( 'check_dismissed',                      array( $this, 'check_dismissed'             )           );
