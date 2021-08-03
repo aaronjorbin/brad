@@ -2,7 +2,7 @@
 Contributors: jorbin, norcross
 Tags: seo
 Requires at least: 4.8
-Tested up to: 5.1alpha
+Tested up to: 5.8
 Stable tag: trunk
 License: GPLv2+
 
