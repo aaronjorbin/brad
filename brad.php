@@ -3,7 +3,7 @@
  Plugin Name: BRAD
  Plugin URI: https://github.com/aaronjorbin/brad
  Description: Better Responsility Around Discoverability
- Version: 0.2.0
+ Version: 0.2.1
  Author: Aaron Jorbin
  Author URI: https://daily.jorb.in
  Text Domain: brad
@@ -24,7 +24,6 @@ class BRAD_Admin_Notice {
 		add_action( 'admin_notices',                        array( $this, 'admin_notices'               )           );
 		add_action( 'wp_ajax_dismiss_brad_notice',          array( $this, 'dismiss_notice'              )           );
 		add_action( 'admin_footer',                         array( $this, 'add_js_for_ajax'             )           );
-		add_action( 'admin_init',                           array( $this, 'add_privacy_policy'          )           );
 
 		// Our setup for the scheduled check and clear of the setting.
 		add_action( 'check_dismissed',                      array( $this, 'check_dismissed'             )           );
@@ -44,8 +43,8 @@ class BRAD_Admin_Notice {
 	 */
 	public function clear_dismissed_on_changes( $option, $old_value, $value ) {
 
-		// If we are on public flag or one of the URL updates, handle that.
-		if ( $old_value !== $value && in_array( sanitize_key( $option ), array( 'blog_public', 'home', 'siteurl' ) ) ) {
+		// If we are on public flag, the privacy policy, or one of the URL updates, handle that.
+		if ( $old_value !== $value && in_array( sanitize_key( $option ), array( 'blog_public', 'home', 'siteurl', 'wp_page_for_privacy_policy' ) ) ) {
 			update_option( 'brad_dismiss_notice', 'no', 'no' );
 		}
 	}
