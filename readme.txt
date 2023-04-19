@@ -6,7 +6,7 @@ Tested up to: 6.1
 Stable tag: 0.2
 License: GPLv2+
 
-BRAD will help you by providing Better Responsibility Around Discoverability. Don\'t accidentally have your site excluded from search engines.
+BRAD will help you by providing Better Responsibility Around Discoverability. Don't accidentally have your site excluded from search engines.
 
 == Changelog ==
 
