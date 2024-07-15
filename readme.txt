@@ -2,7 +2,7 @@
 Contributors: jorbin, norcross
 Tags: seo
 Requires at least: 4.8
-Tested up to: 6.1
+Tested up to: 6.6
 Stable tag: 0.2.1
 License: GPLv2+
 
